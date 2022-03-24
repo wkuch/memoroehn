@@ -1,0 +1,11 @@
+.emoji {
+  font-size: xx-large;
+  text-align: center;
+  min-height: 100px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wrapper {
+  align-self: center;
+}

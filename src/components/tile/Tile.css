@@ -1,0 +1,10 @@
+.tile {
+  background-color: rgb(36, 36, 36);
+  display: flex !important;
+  height: 3em;
+  width: 3em;
+
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+}
