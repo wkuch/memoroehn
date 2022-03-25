@@ -117,16 +117,19 @@ class Board extends Component {
       return <div>loading</div>;
     }
     return (
-      <div className="">
-        {this.state.boardData.map((lineData, rowNo, arr) =>
-          this.renderBoardLine(lineData, rowNo, arr)
-        )}
-        {this.state.foundPairs >= (width * height) / 2 && (
-          <div className="mt-5 success">
-            <div>Glückwunsch</div>
-            <Emoji symbol="💩" small />
-          </div>
-        )}
+      <div className="is-flex is-flex-direction-column is-align-items-center">
+        <div className="is-size-3">Röhnory</div>
+        <div>
+          {this.state.boardData.map((lineData, rowNo, arr) =>
+            this.renderBoardLine(lineData, rowNo, arr)
+          )}
+          {this.state.foundPairs >= (width * height) / 2 && (
+            <div className="mt-5 success">
+              <div>Glückwunsch</div>
+              <Emoji symbol="💩" small />
+            </div>
+          )}
+        </div>
       </div>
     );
   }
