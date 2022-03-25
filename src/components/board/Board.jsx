@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Emoji from "../emoji/Emoji";
 import Tile from "../tile/Tile";
+import images from "../../resources/packOne";
 import "./Board.css";
 
 const width = 5;
@@ -22,6 +23,9 @@ let emojiPool = [
   "👖",
   "🥳",
 ];
+
+const imageMode = true;
+
 class Board extends Component {
   constructor(props) {
     super(props);
@@ -35,13 +39,16 @@ class Board extends Component {
   componentDidMount() {
     let counter = 0;
     let tempBoard = this.state.boardData;
+
+    let visualPool = imageMode ? images : emojiPool;
+
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        if (counter % emojiPool.length === 0) {
-          emojiPool = shuffle(emojiPool);
+        if (counter % visualPool.length === 0) {
+          visualPool = shuffle(visualPool);
         }
         let currentTileData = {
-          emoji: emojiPool[counter % emojiPool.length],
+          visual: visualPool[counter % visualPool.length],
           discovered: false,
           solved: false,
           position: [i, j],
@@ -50,6 +57,7 @@ class Board extends Component {
         counter++;
       }
     }
+
     this.setState({ boardData: tempBoard });
   }
 
@@ -82,7 +90,7 @@ class Board extends Component {
     if (
       newOpenTiles.length === 2 &&
       newOpenTiles[0].position !== newOpenTiles[1].position &&
-      newOpenTiles[0].emoji === newOpenTiles[1].emoji
+      newOpenTiles[0].visual === newOpenTiles[1].visual
     ) {
       this.setState({ foundPairs: this.state.foundPairs + 1 });
       this.setState({ openTiles: [] });
@@ -102,7 +110,8 @@ class Board extends Component {
         {lineArr.map((tileData, columnNo) => (
           <div onClick={() => this.handleTileClick(rowNo, columnNo)}>
             <Tile
-              symbol={tileData.emoji}
+              symbol={imageMode ? null : tileData.visual}
+              background={imageMode ? tileData.visual : null}
               discovered={tileData.discovered}
               solved={tileData.solved}
             />

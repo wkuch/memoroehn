@@ -1,5 +1,6 @@
 import React from "react";
 import Emoji from "../emoji/Emoji";
+import Image from "../image/Image";
 import "./Tile.css";
 
 const Tile = (props) => {
@@ -9,7 +10,8 @@ const Tile = (props) => {
         props.solved && "solved"
       }`}
     >
-      {props.discovered && <Emoji symbol={props.symbol} />}
+      {props.discovered && !props.background && <Emoji symbol={props.symbol} />}
+      {props.discovered && props.background && <Image src={props.background} />}
     </div>
   );
 };
