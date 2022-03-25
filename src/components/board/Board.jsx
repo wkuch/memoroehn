@@ -27,6 +27,8 @@ class Board extends Component {
     super(props);
     this.state = {
       boardData: [[], [], [], [], [], []],
+      openTiles: [],
+      foundPairs: 0,
     };
   }
 
@@ -40,7 +42,9 @@ class Board extends Component {
         }
         let currentTileData = {
           emoji: emojiPool[counter % emojiPool.length],
-          discovered: true,
+          discovered: false,
+          solved: false,
+          position: [i, j],
         };
         tempBoard[i][j] = currentTileData;
         counter++;
@@ -49,14 +53,59 @@ class Board extends Component {
     this.setState({ boardData: tempBoard });
   }
 
+  handleTileClick(rowNo, columnNo) {
+    console.log(this.state.openTiles);
+    if (
+      this.state.boardData[rowNo][columnNo].solved ||
+      this.state.openTiles.includes(this.state.boardData[rowNo][columnNo])
+    ) {
+      return;
+    }
+    let hasToBeCleared = false;
+    if (this.state.openTiles.length >= 2) {
+      hasToBeCleared = true;
+      this.state.openTiles.map((tile) => {
+        tile.discovered = false;
+      });
+      this.setState({ openTiles: [] });
+    }
+
+    let newOpenTiles = hasToBeCleared ? [] : [...this.state.openTiles];
+
+    newOpenTiles.push(this.state.boardData[rowNo][columnNo]);
+    this.setState({
+      openTiles: newOpenTiles,
+    });
+
+    let temptData = [...this.state.boardData];
+
+    if (
+      newOpenTiles.length == 2 &&
+      newOpenTiles[0].position != newOpenTiles[1].position &&
+      newOpenTiles[0].emoji == newOpenTiles[1].emoji
+    ) {
+      this.setState({ foundPairs: this.state.foundPairs + 1 });
+      this.setState({ openTiles: [] });
+      temptData[rowNo][columnNo].solved = true;
+      temptData[newOpenTiles[0].position[0]][
+        newOpenTiles[0].position[1]
+      ].solved = true;
+    }
+
+    temptData[rowNo][columnNo].discovered = true;
+    this.setState({ boardData: temptData });
+  }
+
   renderBoardLine(lineArr, rowNo, arr) {
-    console.log(arr);
-    console.log(lineArr);
     return (
       <div className="is-flex is-flex-direction-row">
         {lineArr.map((tileData, columnNo) => (
-          <div>
-            <Tile symbol={tileData.emoji} discovered={tileData.discovered} />
+          <div onClick={() => this.handleTileClick(rowNo, columnNo)}>
+            <Tile
+              symbol={tileData.emoji}
+              discovered={tileData.discovered}
+              solved={tileData.solved}
+            />
           </div>
         ))}
       </div>
@@ -68,16 +117,15 @@ class Board extends Component {
       return <div>loading</div>;
     }
     return (
-      <div>
-        <Tile symbol="😍" discovered={true} />
-        <button
-          className="button"
-          onClick={() => console.log(this.state.boardData)}
-        >
-          print
-        </button>
+      <div className="">
         {this.state.boardData.map((lineData, rowNo, arr) =>
           this.renderBoardLine(lineData, rowNo, arr)
+        )}
+        {this.state.foundPairs >= (width * height) / 2 && (
+          <div className="mt-5 success">
+            <div>Glückwunsch</div>
+            <Emoji symbol="💩" small />
+          </div>
         )}
       </div>
     );

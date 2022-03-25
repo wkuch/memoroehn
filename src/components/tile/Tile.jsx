@@ -4,7 +4,11 @@ import "./Tile.css";
 
 const Tile = (props) => {
   return (
-    <div className="tile m-1">
+    <div
+      className={`tile m-1 ${props.discovered && "open"} ${
+        props.solved && "solved"
+      }`}
+    >
       {props.discovered && <Emoji symbol={props.symbol} />}
     </div>
   );
