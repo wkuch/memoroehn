@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Emoji from "../emoji/Emoji";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Tile from "../tile/Tile";
 import images from "../../resources/packOne";
 import "./Board.css";
@@ -23,6 +25,12 @@ let emojiPool = [
   "👖",
   "🥳",
 ];
+const oneTry = "🟩";
+const twoTry = "🟨";
+const threeTry = "🟧";
+const fourTry = "🟥";
+
+const scoreEmojis = [oneTry, twoTry, threeTry, fourTry];
 
 const imageMode = true;
 
@@ -33,6 +41,7 @@ class Board extends Component {
       boardData: [[], [], [], [], [], []],
       openTiles: [],
       foundPairs: 0,
+      steps: 0,
     };
   }
 
@@ -50,6 +59,7 @@ class Board extends Component {
         let currentTileData = {
           visual: visualPool[counter % visualPool.length],
           discovered: false,
+          timesOpened: 0,
           solved: false,
           position: [i, j],
         };
@@ -62,7 +72,6 @@ class Board extends Component {
   }
 
   handleTileClick(rowNo, columnNo) {
-    console.log(this.state.openTiles);
     if (
       this.state.boardData[rowNo][columnNo].solved ||
       this.state.openTiles.includes(this.state.boardData[rowNo][columnNo])
@@ -87,6 +96,10 @@ class Board extends Component {
 
     let temptData = [...this.state.boardData];
 
+    temptData[rowNo][columnNo].timesOpened =
+      temptData[rowNo][columnNo].timesOpened + 1;
+    this.setState({ steps: this.state.steps + 1 });
+
     if (
       newOpenTiles.length === 2 &&
       newOpenTiles[0].position !== newOpenTiles[1].position &&
@@ -101,7 +114,43 @@ class Board extends Component {
     }
 
     temptData[rowNo][columnNo].discovered = true;
+
     this.setState({ boardData: temptData });
+  }
+
+  handleShareClick() {
+    toast.success("Score in die Zwischenablage gespeichert!", {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    console.log(scoreEmojis);
+    let scoreString = "🧠 Memoröhn 🧠 \n";
+    this.state.boardData.forEach((lineData) => {
+      let lineString = "";
+      for (let i = 0; i < lineData.length; i++) {
+        if (lineData[i].timesOpened <= 2) {
+          lineString = lineString + scoreEmojis[0];
+          continue;
+        }
+        if (lineData[i].timesOpened > 2 && lineData[i].timesOpened < 5) {
+          lineString = lineString + scoreEmojis[lineData[i].timesOpened - 2];
+        } else {
+          console.log("over 5");
+          console.log(scoreEmojis);
+          lineString = lineString + scoreEmojis[3];
+        }
+      }
+      scoreString = scoreString + lineString + "\n";
+    });
+
+    scoreString = scoreString + `💯 Versuche: ${this.state.steps} 💯`;
+
+    navigator.clipboard.writeText(scoreString);
   }
 
   renderBoardLine(lineArr, rowNo, arr) {
@@ -132,10 +181,26 @@ class Board extends Component {
           {this.state.boardData.map((lineData, rowNo, arr) =>
             this.renderBoardLine(lineData, rowNo, arr)
           )}
-          {this.state.foundPairs >= (width * height) / 2 && (
+          {this.state.foundPairs <= (width * height) / 2 && (
             <div className="success">
               <div>Glückwunsch</div>
-              <Emoji symbol="💩" small />
+              <div>
+                <Emoji symbol="💩" small />
+                <button className="btn" onClick={() => this.handleShareClick()}>
+                  share score <i className="fa fa-home"></i>
+                </button>
+                <ToastContainer
+                  position="bottom-center"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                />
+              </div>
             </div>
           )}
         </div>
