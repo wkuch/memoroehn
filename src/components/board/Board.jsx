@@ -181,7 +181,7 @@ class Board extends Component {
           {this.state.boardData.map((lineData, rowNo, arr) =>
             this.renderBoardLine(lineData, rowNo, arr)
           )}
-          {this.state.foundPairs <= (width * height) / 2 && (
+          {this.state.foundPairs >= (width * height) / 2 && (
             <div className="success">
               <div>Glückwunsch</div>
               <div>
