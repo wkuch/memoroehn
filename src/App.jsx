@@ -1,4 +1,3 @@
-import "bulma/css/bulma.min.css";
 import Board from "./components/board/Board";
 
 function App() {

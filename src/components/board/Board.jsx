@@ -98,7 +98,7 @@ class Board extends Component {
 
   renderBoardLine(lineArr, rowNo, arr) {
     return (
-      <div className="is-flex is-flex-direction-row">
+      <div className="line">
         {lineArr.map((tileData, columnNo) => (
           <div onClick={() => this.handleTileClick(rowNo, columnNo)}>
             <Tile
@@ -117,14 +117,14 @@ class Board extends Component {
       return <div>loading</div>;
     }
     return (
-      <div className="is-flex is-flex-direction-column is-align-items-center">
-        <div className="is-size-3">Memoröhn</div>
+      <div className="board">
+        <div className="header">Memoröhn</div>
         <div>
           {this.state.boardData.map((lineData, rowNo, arr) =>
             this.renderBoardLine(lineData, rowNo, arr)
           )}
           {this.state.foundPairs >= (width * height) / 2 && (
-            <div className="mt-5 success">
+            <div className="success">
               <div>Glückwunsch</div>
               <Emoji symbol="💩" small />
             </div>
