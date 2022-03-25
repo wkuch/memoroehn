@@ -118,7 +118,7 @@ class Board extends Component {
     }
     return (
       <div className="is-flex is-flex-direction-column is-align-items-center">
-        <div className="is-size-3">Röhnory</div>
+        <div className="is-size-3">Memoröhn</div>
         <div>
           {this.state.boardData.map((lineData, rowNo, arr) =>
             this.renderBoardLine(lineData, rowNo, arr)
