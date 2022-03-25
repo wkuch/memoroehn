@@ -37,7 +37,7 @@ class Board extends Component {
     let tempBoard = this.state.boardData;
     for (let i = 0; i < height; i++) {
       for (let j = 0; j < width; j++) {
-        if (counter % emojiPool.length == 0) {
+        if (counter % emojiPool.length === 0) {
           emojiPool = shuffle(emojiPool);
         }
         let currentTileData = {
@@ -64,7 +64,7 @@ class Board extends Component {
     let hasToBeCleared = false;
     if (this.state.openTiles.length >= 2) {
       hasToBeCleared = true;
-      this.state.openTiles.map((tile) => {
+      this.state.openTiles.forEach((tile) => {
         tile.discovered = false;
       });
       this.setState({ openTiles: [] });
@@ -80,9 +80,9 @@ class Board extends Component {
     let temptData = [...this.state.boardData];
 
     if (
-      newOpenTiles.length == 2 &&
-      newOpenTiles[0].position != newOpenTiles[1].position &&
-      newOpenTiles[0].emoji == newOpenTiles[1].emoji
+      newOpenTiles.length === 2 &&
+      newOpenTiles[0].position !== newOpenTiles[1].position &&
+      newOpenTiles[0].emoji === newOpenTiles[1].emoji
     ) {
       this.setState({ foundPairs: this.state.foundPairs + 1 });
       this.setState({ openTiles: [] });
@@ -113,7 +113,7 @@ class Board extends Component {
   }
 
   render() {
-    if (this.state.boardData[0][0] == undefined) {
+    if (this.state.boardData[0][0] === undefined) {
       return <div>loading</div>;
     }
     return (
