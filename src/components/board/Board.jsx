@@ -6,8 +6,8 @@ import Tile from "../tile/Tile";
 import images from "../../resources/packOne";
 import "./Board.css";
 
-const width = 5;
-const height = 6;
+const width = 6;
+const height = 5;
 let emojiPool = [
   "🧳",
   "🌂",
@@ -38,7 +38,7 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      boardData: [[], [], [], [], [], []],
+      boardData: [[], [], [], [], []],
       openTiles: [],
       foundPairs: 0,
       steps: 0,
@@ -155,7 +155,7 @@ class Board extends Component {
 
   renderBoardLine(lineArr, rowNo, arr) {
     return (
-      <div className="line">
+      <div className="">
         {lineArr.map((tileData, columnNo) => (
           <div onClick={() => this.handleTileClick(rowNo, columnNo)}>
             <Tile
@@ -175,12 +175,16 @@ class Board extends Component {
       return <div>loading</div>;
     }
     return (
-      <div className="board has-background-white">
+      <div className="game has-background-white">
         <div className="header ">Memoröhn</div>
         <div>
-          {this.state.boardData.map((lineData, rowNo, arr) =>
-            this.renderBoardLine(lineData, rowNo, arr)
-          )}
+          <div className="board-container">
+            <div className="board">
+              {this.state.boardData.map((lineData, rowNo, arr) =>
+                this.renderBoardLine(lineData, rowNo, arr)
+              )}
+            </div>
+          </div>
           {this.state.foundPairs >= (width * height) / 2 && (
             <div className="success">
               <div>Glückwunsch</div>
