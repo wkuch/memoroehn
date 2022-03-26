@@ -175,8 +175,8 @@ class Board extends Component {
       return <div>loading</div>;
     }
     return (
-      <div className="board">
-        <div className="header">Memoröhn</div>
+      <div className="board has-background-white">
+        <div className="header ">Memoröhn</div>
         <div>
           {this.state.boardData.map((lineData, rowNo, arr) =>
             this.renderBoardLine(lineData, rowNo, arr)
