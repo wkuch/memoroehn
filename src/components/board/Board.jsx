@@ -4,6 +4,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tile from "../tile/Tile";
 import "./Board.css";
+import Icon from "@mdi/react";
+import { mdiShareVariant } from "@mdi/js";
 
 const heightNew = 6;
 const widthNew = 5;
@@ -191,13 +193,28 @@ class Board extends Component {
               )}
             </div>
           </div>
-          {this.state.foundPairs <= (heightNew * widthNew) / 2 && (
+          {this.state.foundPairs >= (heightNew * widthNew) / 2 && (
             <div className="success">
               <div>Glückwunsch</div>
               <div>
                 <Emoji symbol="💩" small />
-                <button className="btn" onClick={() => this.handleShareClick()}>
-                  share score <i className="fa fa-home"></i>
+                <button
+                  className="button is-primary mb-3"
+                  onClick={() => this.handleShareClick()}
+                >
+                  <div className="is-flex">
+                    Share score
+                    <Icon
+                      className="ml-2"
+                      path={mdiShareVariant}
+                      title="share score"
+                      size={1}
+                      horizontal
+                      vertical
+                      rotate={180}
+                      color="black"
+                    />
+                  </div>
                 </button>
                 <ToastContainer
                   position="bottom-center"
