@@ -6,10 +6,6 @@ import oleImages from "../../resources/packOne";
 import menschenImages from "../../resources/packTwo";
 
 class Routing extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <BrowserRouter>
