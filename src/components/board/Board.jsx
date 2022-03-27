@@ -3,11 +3,10 @@ import Emoji from "../emoji/Emoji";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tile from "../tile/Tile";
-import images from "../../resources/packOne";
 import "./Board.css";
 
-const width = 6;
-const height = 5;
+const heightNew = 6;
+const widthNew = 5;
 let emojiPool = [
   "🧳",
   "🌂",
@@ -49,10 +48,10 @@ class Board extends Component {
     let counter = 0;
     let tempBoard = this.state.boardData;
 
-    let visualPool = imageMode ? images : emojiPool;
+    let visualPool = imageMode ? this.props.images : emojiPool;
 
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
+    for (let i = 0; i < widthNew; i++) {
+      for (let j = 0; j < heightNew; j++) {
         if (counter % visualPool.length === 0) {
           visualPool = shuffle(visualPool);
         }
@@ -71,10 +70,11 @@ class Board extends Component {
     this.setState({ boardData: tempBoard });
   }
 
-  handleTileClick(rowNo, columnNo) {
+  handleTileClick(columnPos, rowPos) {
+    console.log("Col: " + columnPos + " Row: " + rowPos);
     if (
-      this.state.boardData[rowNo][columnNo].solved ||
-      this.state.openTiles.includes(this.state.boardData[rowNo][columnNo])
+      this.state.boardData[columnPos][rowPos].solved ||
+      this.state.openTiles.includes(this.state.boardData[columnPos][rowPos])
     ) {
       return;
     }
@@ -89,15 +89,14 @@ class Board extends Component {
 
     let newOpenTiles = hasToBeCleared ? [] : [...this.state.openTiles];
 
-    newOpenTiles.push(this.state.boardData[rowNo][columnNo]);
+    newOpenTiles.push(this.state.boardData[columnPos][rowPos]);
     this.setState({
       openTiles: newOpenTiles,
     });
-
     let temptData = [...this.state.boardData];
 
-    temptData[rowNo][columnNo].timesOpened =
-      temptData[rowNo][columnNo].timesOpened + 1;
+    temptData[columnPos][rowPos].timesOpened =
+      temptData[columnPos][rowPos].timesOpened + 1;
     this.setState({ steps: this.state.steps + 1 });
 
     if (
@@ -107,13 +106,13 @@ class Board extends Component {
     ) {
       this.setState({ foundPairs: this.state.foundPairs + 1 });
       this.setState({ openTiles: [] });
-      temptData[rowNo][columnNo].solved = true;
+      temptData[columnPos][rowPos].solved = true;
       temptData[newOpenTiles[0].position[0]][
         newOpenTiles[0].position[1]
       ].solved = true;
     }
 
-    temptData[rowNo][columnNo].discovered = true;
+    temptData[columnPos][rowPos].discovered = true;
 
     this.setState({ boardData: temptData });
   }
@@ -128,9 +127,18 @@ class Board extends Component {
       draggable: true,
       progress: undefined,
     });
-    console.log(scoreEmojis);
+
+    let scoreArr = [[], [], [], [], [], []];
+
+    for (let i = 0; i < this.state.boardData.length; i++) {
+      for (let j = 0; j < this.state.boardData[i].length; j++) {
+        console.log("i: " + i + "j " + j);
+        scoreArr[j].push(this.state.boardData[i][j]);
+      }
+    }
+
     let scoreString = "🧠 Memoröhn 🧠 \n";
-    this.state.boardData.forEach((lineData) => {
+    scoreArr.forEach((lineData) => {
       let lineString = "";
       for (let i = 0; i < lineData.length; i++) {
         if (lineData[i].timesOpened <= 2) {
@@ -140,8 +148,6 @@ class Board extends Component {
         if (lineData[i].timesOpened > 2 && lineData[i].timesOpened < 5) {
           lineString = lineString + scoreEmojis[lineData[i].timesOpened - 2];
         } else {
-          console.log("over 5");
-          console.log(scoreEmojis);
           lineString = lineString + scoreEmojis[3];
         }
       }
@@ -180,12 +186,12 @@ class Board extends Component {
         <div>
           <div className="board-container">
             <div className="board">
-              {this.state.boardData.map((lineData, rowNo, arr) =>
-                this.renderBoardLine(lineData, rowNo, arr)
+              {this.state.boardData.map((colData, colNo, arr) =>
+                this.renderBoardLine(colData, colNo, arr)
               )}
             </div>
           </div>
-          {this.state.foundPairs >= (width * height) / 2 && (
+          {this.state.foundPairs <= (heightNew * widthNew) / 2 && (
             <div className="success">
               <div>Glückwunsch</div>
               <div>

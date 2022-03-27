@@ -8,10 +8,3 @@
   font-weight: bold;
   transition: transform 200ms, box-shadow 200ms;
 }
-.open {
-  background-color: rgb(255, 93, 93);
-}
-
-.solved {
-  background-color: rgb(78, 255, 107);
-}
