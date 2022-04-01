@@ -6,6 +6,7 @@ import Tile from "../tile/Tile";
 import "./Board.css";
 import Icon from "@mdi/react";
 import { mdiShareVariant } from "@mdi/js";
+import { mdiCog } from "@mdi/js";
 
 const heightNew = 6;
 const widthNew = 5;
@@ -39,6 +40,7 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      settingsVisible: false,
       boardData: [[], [], [], [], []],
       openTiles: [],
       foundPairs: 0,
@@ -157,7 +159,7 @@ class Board extends Component {
     });
 
     scoreString = scoreString + `💯 Versuche: ${this.state.steps} 💯`;
-
+    scoreString = scoreString + "\n\n memoröhn.de";
     navigator.clipboard.writeText(scoreString);
   }
 
@@ -178,13 +180,62 @@ class Board extends Component {
     );
   }
 
+  renderSettingsModal() {
+    return (
+      <div>
+        <div className="modal-background"></div>
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Einstellungen</p>
+          </header>
+          <section className="modal-card-body">
+            <div>
+              <label className="checkbox">-- coming soon --</label>
+            </div>
+          </section>
+          <footer className="modal-card-foot">
+            <button
+              className="button is-success"
+              onClick={() => this.handleSettingsClick()}
+            >
+              Save changes
+            </button>
+          </footer>
+        </div>
+      </div>
+    );
+  }
+
+  handleSettingsClick() {
+    this.setState({ settingsVisible: !this.state.settingsVisible });
+  }
+
   render() {
+    const active = this.state.settingsVisible ? "is-active" : "";
     if (this.state.boardData[0][0] === undefined) {
       return <div>loading</div>;
     }
     return (
       <div className="game has-background-white">
-        <div className="header ">Memoröhn</div>
+        <div className={`modal ${active}`}>{this.renderSettingsModal()}</div>
+        <div className="is-flex is-flex-direction-column header">
+          <div
+            className="is-align-self-flex-end p-2"
+            onClick={() => this.handleSettingsClick()}
+          >
+            <Icon
+              className="ml-2"
+              path={mdiCog}
+              title="share score"
+              size={0.7}
+              horizontal
+              vertical
+              rotate={180}
+              color="black"
+            />
+          </div>
+          <div className="is-size-3 is-align-self-center">Memoröhn</div>
+        </div>
         <div>
           <div className="board-container">
             <div className="board">
