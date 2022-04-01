@@ -159,7 +159,6 @@ class Board extends Component {
     });
 
     scoreString = scoreString + `💯 Versuche: ${this.state.steps} 💯`;
-    scoreString = scoreString + "\n\n memoröhn.de";
     navigator.clipboard.writeText(scoreString);
   }
 
