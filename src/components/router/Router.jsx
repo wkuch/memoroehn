@@ -12,9 +12,18 @@ class Routing extends Component {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Menu />} />
-          <Route path="olaf" element={<Board images={oleImages} />} />
-          <Route path="menschen" element={<Board images={menschenImages} />} />
-          <Route path="autisten" element={<Board images={autistenImgs} />} />
+          <Route
+            path="olaf"
+            element={<Board url={"olaf"} images={oleImages} />}
+          />
+          <Route
+            path="menschen"
+            element={<Board url={"menschen"} images={menschenImages} />}
+          />
+          <Route
+            path="autisten"
+            element={<Board url={"autisten"} images={autistenImgs} />}
+          />
         </Routes>
       </BrowserRouter>
     );

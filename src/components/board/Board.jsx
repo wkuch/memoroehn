@@ -45,6 +45,8 @@ class Board extends Component {
       openTiles: [],
       foundPairs: 0,
       steps: 0,
+      startTime: null,
+      runTime: null,
     };
   }
 
@@ -75,7 +77,10 @@ class Board extends Component {
   }
 
   handleTileClick(columnPos, rowPos) {
-    console.log("Col: " + columnPos + " Row: " + rowPos);
+    if (this.state.steps === 0) {
+      this.setState({ startTime: new Date() });
+    }
+
     if (
       this.state.boardData[columnPos][rowPos].solved ||
       this.state.openTiles.includes(this.state.boardData[columnPos][rowPos])
@@ -114,6 +119,8 @@ class Board extends Component {
       temptData[newOpenTiles[0].position[0]][
         newOpenTiles[0].position[1]
       ].solved = true;
+      const runTime = new Date() - this.state.startTime;
+      this.setState({ runTime });
     }
 
     temptData[columnPos][rowPos].discovered = true;
@@ -136,7 +143,6 @@ class Board extends Component {
 
     for (let i = 0; i < this.state.boardData.length; i++) {
       for (let j = 0; j < this.state.boardData[i].length; j++) {
-        console.log("i: " + i + "j " + j);
         scoreArr[j].push(this.state.boardData[i][j]);
       }
     }
@@ -159,7 +165,32 @@ class Board extends Component {
     });
 
     scoreString = scoreString + `💯 Versuche: ${this.state.steps} 💯`;
+    scoreString = scoreString + "\n Zeit: ⏱️" + this.renderTimeString() + "⏱️";
+
+    scoreString = scoreString + "\n\n memoröhn.de/" + this.props.url;
     navigator.clipboard.writeText(scoreString);
+  }
+
+  renderTimeString() {
+    const time = this.state.runTime;
+    const ms = time % 1000;
+    const s = ((time % 60000) - ms) / 1000;
+    const m = Math.floor((time % 3600000) / 60000);
+
+    return `${this.addPadding(m, 2)}:${this.addPadding(s, 2)}:${this.addPadding(
+      ms,
+      3
+    )}`;
+  }
+
+  addPadding(number, supposedLength) {
+    let numberString = "" + number;
+    const numberStringLength = numberString.length;
+    for (let i = supposedLength; i > numberStringLength; i--) {
+      numberString = "0" + numberString;
+    }
+
+    return numberString;
   }
 
   renderBoardLine(lineArr, rowNo, arr) {
@@ -205,6 +236,49 @@ class Board extends Component {
     );
   }
 
+  renderScoreSection() {
+    return (
+      <div className="success">
+        <div className="is-size-5">Glückwunsch</div>
+        <div>
+          <div className="is-flex is-flex-direction-row is-justify-content-center mb-2">
+            <div className="mr-2">Versuche: {this.state.steps}</div>
+            <div>Zeit: {this.renderTimeString()}</div>
+          </div>
+          <button
+            className="button is-primary mb-3"
+            onClick={() => this.handleShareClick()}
+          >
+            <div className="is-flex">
+              Share score
+              <Icon
+                className="ml-2"
+                path={mdiShareVariant}
+                title="share score"
+                size={1}
+                horizontal
+                vertical
+                rotate={180}
+                color="black"
+              />
+            </div>
+          </button>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </div>
+      </div>
+    );
+  }
+
   handleSettingsClick() {
     this.setState({ settingsVisible: !this.state.settingsVisible });
   }
@@ -243,43 +317,8 @@ class Board extends Component {
               )}
             </div>
           </div>
-          {this.state.foundPairs >= (heightNew * widthNew) / 2 && (
-            <div className="success">
-              <div>Glückwunsch</div>
-              <div>
-                <Emoji symbol="💩" small />
-                <button
-                  className="button is-primary mb-3"
-                  onClick={() => this.handleShareClick()}
-                >
-                  <div className="is-flex">
-                    Share score
-                    <Icon
-                      className="ml-2"
-                      path={mdiShareVariant}
-                      title="share score"
-                      size={1}
-                      horizontal
-                      vertical
-                      rotate={180}
-                      color="black"
-                    />
-                  </div>
-                </button>
-                <ToastContainer
-                  position="bottom-center"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop={false}
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                />
-              </div>
-            </div>
-          )}
+          {this.state.foundPairs >= (heightNew * widthNew) / 2 &&
+            this.renderScoreSection()}
         </div>
       </div>
     );
