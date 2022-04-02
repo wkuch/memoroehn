@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Emoji from "../emoji/Emoji";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tile from "../tile/Tile";
